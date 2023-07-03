@@ -1,43 +1,60 @@
 // This is our main function
-function fizzbuzz() {
+function fizzbuzz(max,
+                  rule3,
+                  rule5,
+                  rule7,
+                  rule11,
+                  rule13,
+                  rule17) {
 
-    for (let i = 1; i <= 1000; i++) {
-        let finalString = '';
-        if (i % 3 === 0) {
-            finalString += 'Fizz';
+    for (let i = 1; i <= max; i++) {
+        let wordList = [];
+        if (i % 3 === 0 && rule3) {
+            wordList.push('Fizz');
         }
-        if (i % 5 === 0) {
-            finalString += 'Buzz';
+        if (i % 5 === 0 && rule5) {
+            wordList.push('Buzz');
         }
-        if (i % 7 === 0) {
-            finalString += 'Bang';
+        if (i % 7 === 0 && rule7) {
+            wordList.push('Bang');
         }
-        if (i % 11 === 0) {
-            finalString = 'Bong';
+        if (i % 11 === 0 && rule11) {
+            wordList = ['Bong'];
         }
-        if (i % 13 === 0) {
-            let bIndex = finalString.indexOf('B');
+        if (i % 13 === 0 && rule13) {
+            let bIndex = wordList.findIndex(word => word.startsWith('B'))
             if (bIndex > -1) {
-                finalString = finalString.substring(0, bIndex) + 'Fezz' + finalString.substring(bIndex)
+                wordList = wordList.slice(0, bIndex) + 'Fezz' + wordList.slice(bIndex)
             } else {
-                finalString += 'Fezz';
+                wordList.push('Fezz');
             }
         }
-        if (finalString === '') {
+        if (i % 17 === 0 && rule17) {
+            wordList.reverse();
+        }
+
+        if (wordList.length === 0) {
             console.log(i)
         } else {
-            if (i % 17 === 0) {
-                let split4 = finalString.match( /.{1,4}/g );
-                split4.reverse();
-                finalString = split4.join('')
-            }
-            console.log(finalString)
+            console.log(wordList.join(''))
         }
 
     }
 
 }
 
-// Now, we run the main function:
-fizzbuzz();
+function hasRule(num, string) {
+    return string.indexOf('-' + num) > -1;
+}
 
+
+const readline = require("readline");
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+rl.question("What is the max number?", function(maxNum) {
+    fizzbuzz(maxNum.split(' ')[0], hasRule(3, maxNum), hasRule(5, maxNum), hasRule(7, maxNum), hasRule(11, maxNum), hasRule(13, maxNum), hasRule(17, maxNum));
+    process.exit(0);
+});
